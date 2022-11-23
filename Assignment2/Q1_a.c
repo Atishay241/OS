@@ -39,7 +39,7 @@ void *countB(){
     }
     clock_gettime(CLOCK_MONOTONIC, &end);
     diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
-    printf("elapsed time = %llu nanoseconds for others RR\n", (long long unsigned int)diff);
+    printf("elapsed time = %llu nanoseconds for RR\n", (long long unsigned int)diff);
     return NULL;
 }
 
@@ -56,7 +56,7 @@ void *countC(){
     }
     clock_gettime(CLOCK_MONOTONIC, &end);
     diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
-    printf("elapsed time = %llu nanoseconds for others for FIFO\n", (long long unsigned int)diff);
+    printf("elapsed time = %llu nanoseconds for FIFO\n", (long long unsigned int)diff);
     return NULL;
 }
 
@@ -72,24 +72,24 @@ int main(int argc , char const *argv[]){
     // printf("done\n");
 
     r1=pthread_attr_init(&attr1);
-    // pthread_attr_setinheritsched(&attr1, PTHREAD_EXPLICIT_SCHED);
+   // pthread_attr_setinheritsched(&attr1, PTHREAD_EXPLICIT_SCHED);
     r1=pthread_attr_setschedpolicy(&attr1, SCHED_OTHER);
-    sparam1.sched_priority=3;
+    sparam1.sched_priority=10;
     r1=pthread_attr_setschedparam(&attr1,&sparam1);
     
     // printf("done\n");
     
     r2=pthread_attr_init(&attr2);
-    // pthread_attr_setinheritsched(&attr2, PTHREAD_EXPLICIT_SCHED);
+   // pthread_attr_setinheritsched(&attr2, PTHREAD_EXPLICIT_SCHED);
     r2=pthread_attr_setschedpolicy(&attr2, SCHED_RR);
-    sparam2.sched_priority=3;
+    sparam2.sched_priority=10;
     r2=pthread_attr_setschedparam(&attr2,&sparam2);
    
 
     r3=pthread_attr_init(&attr3);
-    // pthread_attr_setinheritsched(&attr3, PTHREAD_EXPLICIT_SCHED);
+   // pthread_attr_setinheritsched(&attr3, PTHREAD_EXPLICIT_SCHED);
     r3=pthread_attr_setschedpolicy(&attr3, SCHED_FIFO);
-    sparam3.sched_priority=3;
+    sparam3.sched_priority=10;
     r3=pthread_attr_setschedparam(&attr3,&sparam3);
 
     // printf("done\n");
