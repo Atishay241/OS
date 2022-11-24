@@ -30,9 +30,10 @@ void *countA(){
         continue;
     }
     clock_gettime(CLOCK_MONOTONIC, &end);
-    diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
-    printf("elapsed time = %llu nanoseconds for others\n", (long long unsigned int)diff);
-    t1=(long long unsigned int)diff;
+    diff = (end.tv_sec - start.tv_sec); 
+    long double d= (long double)( end.tv_nsec - start.tv_nsec)/BILLION;
+    printf("elapsed time = %Lf nanoseconds for others\n", (long long unsigned int)diff + d);
+    t1=(long long unsigned int)diff + d;
     
     return NULL;
 }
@@ -40,7 +41,7 @@ void *countA(){
 void *countB(){
 
    uint64_t diff;
-    struct timespec start, end;
+   struct timespec start, end;
     
     clock_gettime(CLOCK_MONOTONIC, &start);
     for (long long int i = 1; i <= 4294967296; i++)
@@ -48,16 +49,17 @@ void *countB(){
         continue;
     }
     clock_gettime(CLOCK_MONOTONIC, &end);
-    diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
-    printf("elapsed time = %llu nanoseconds for RR\n", (long long unsigned int)diff);
-    t2=(long long unsigned int)diff;
+    diff = (end.tv_sec - start.tv_sec); 
+    long double d=  (long double)(end.tv_nsec - start.tv_nsec)/BILLION;
+    printf("elapsed time = %Lf nanoseconds for RR\n", (long long unsigned int)diff + d);
+    t2=(long long unsigned int)diff + d;
     return NULL;
 }
 
 
 void *countC(){
 
-  uint64_t diff;
+    uint64_t diff;
     struct timespec start, end;
     
     clock_gettime(CLOCK_MONOTONIC, &start);
@@ -66,9 +68,10 @@ void *countC(){
         continue;
     }
     clock_gettime(CLOCK_MONOTONIC, &end);
-    diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
-    printf("elapsed time = %llu nanoseconds for FIFO\n", (long long unsigned int)diff);
-    t3=(long long unsigned int)diff;
+    diff =  (end.tv_sec - start.tv_sec); 
+    long double d=  (long double)(end.tv_nsec - start.tv_nsec) / BILLION;
+    printf("elapsed time = %Lf nanoseconds for FIFO\n", (long long unsigned int)diff + d);
+    t3=(long long unsigned int)diff + d; 
     return NULL;
 }
 
@@ -82,8 +85,7 @@ int main(int argc , char const *argv[]){
     r1=pthread_attr_init(&attr1);
     r1=pthread_attr_setschedpolicy(&attr1, SCHED_OTHER);
     r1=pthread_attr_setinheritsched(&attr1, PTHREAD_EXPLICIT_SCHED);
-    r1= pthread_attr_setinheritsched(&attr1,PTHREAD_EXPLICIT_SCHED);
-
+  
     
     
     r2=pthread_attr_init(&attr2);
@@ -100,7 +102,7 @@ int main(int argc , char const *argv[]){
     FILE *ptr;
     ptr= fopen("a.data","a");
     for(int i=0;i<10;i++){
-        
+        printf("priority is %d: \n",prio);
         sparam1.sched_priority=0;
         r1=pthread_attr_setschedparam(&attr1,&sparam1);
         pthread_create(&tid1,&attr1,&countA,NULL);
@@ -113,13 +115,14 @@ int main(int argc , char const *argv[]){
         r3=pthread_attr_setschedparam(&attr3,&sparam3);
         pthread_create(&tid3,&attr3,&countC,NULL);
 
-        printf("priority is %d: \n",prio);
+       // printf("priority is %d: \n",prio);
+
         pthread_join(tid1,NULL);
         pthread_join(tid2,NULL);
         pthread_join(tid3,NULL);
         printf("\n");
         
-        fprintf(ptr,"Priority-%d %llu %llu %llu\n",prio,t1,t2,t3);
+        fprintf(ptr,"Priority-%d %Lf %Lf %Lf\n",prio,t1,t2,t3);
         prio+=5;
 
     }
