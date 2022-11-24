@@ -1,0 +1,12 @@
+set terminal pdf
+set output "ans.pdf"
+set title "Q1 a"
+set xlabel "Priority"
+set ylabel "Time(in ns)"
+set style data histogram
+set style fill solid
+set xtic rotate out
+set style histogram clustered
+plot "a.data" using 2:xtic(1) title "SCHED OTHER",\
+"a.data" using 3 title "SCHED FIFO",\
+"a.data" using 4 title "SCHED RR",\
