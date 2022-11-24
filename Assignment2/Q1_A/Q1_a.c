@@ -9,9 +9,9 @@
 #include <stdint.h>
 #define BILLION 1000000000L
 
-long long unsigned int t1;
-long long unsigned int t2;
-long long unsigned int t3;
+long double t1;
+long double t2;
+long double t3;
 
 struct sched_param sparam1;
 struct sched_param sparam2;
@@ -101,7 +101,8 @@ int main(int argc , char const *argv[]){
 
     FILE *ptr;
     ptr= fopen("a.data","a");
-    for(int i=0;i<10;i++){
+   
+    for(int i=0;i<6;i++){
         printf("priority is %d: \n",prio);
         sparam1.sched_priority=0;
         r1=pthread_attr_setschedparam(&attr1,&sparam1);
@@ -117,15 +118,16 @@ int main(int argc , char const *argv[]){
 
        // printf("priority is %d: \n",prio);
 
-        pthread_join(tid1,NULL);
-        pthread_join(tid2,NULL);
         pthread_join(tid3,NULL);
+        pthread_join(tid2,NULL);
+        pthread_join(tid1,NULL);
         printf("\n");
         
         fprintf(ptr,"Priority-%d %Lf %Lf %Lf\n",prio,t1,t2,t3);
         prio+=5;
 
     }
+	printf("time is : %Lf \n ",t1);
 
     fclose(ptr);
 
